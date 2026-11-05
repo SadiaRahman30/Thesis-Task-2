@@ -2,6 +2,7 @@ import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, status
+from fastapi.responses import RedirectResponse
 
 from app.config import settings
 from app.model import model_service
@@ -43,21 +44,12 @@ app = FastAPI(
 
 @app.get(
     "/",
-    tags=["Root"],
-    summary="Root Endpoint",
-    description="Returns service information and documentation links."
+    include_in_schema=False,
+    summary="Root Redirect",
+    description="Redirects to the interactive Swagger UI documentation."
 )
 async def root():
-    return {
-        "service": settings.PROJECT_NAME,
-        "version": settings.VERSION,
-        "docs_url": "/docs",
-        "health_check": "/health",
-        "endpoints": {
-            "predict": "POST /predict",
-            "batch_predict": "POST /predict/batch"
-        }
-    }
+    return RedirectResponse(url="/docs")
 
 @app.get(
     "/health",

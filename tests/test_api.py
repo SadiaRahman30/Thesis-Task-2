@@ -7,13 +7,10 @@ from app.main import app
 client = TestClient(app)
 
 def test_root_endpoint():
-    """Verify root endpoint returns HTTP 200 and API metadata."""
-    response = client.get("/")
-    assert response.status_code == 200
-    data = response.json()
-    assert "service" in data
-    assert "docs_url" in data
-    assert data["docs_url"] == "/docs"
+    """Verify root endpoint redirects to /docs."""
+    response = client.get("/", follow_redirects=False)
+    assert response.status_code in (302, 307)
+    assert response.headers["location"] == "/docs"
 
 def test_health_check_endpoint():
     """Verify health check endpoint returns 200 and healthy status."""
