@@ -3,53 +3,63 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MLOps Multi-Task AI Web App</title>
+  <title>DevShield AI - Code Bug Detector & Optimizer</title>
   <style>
     :root {
       --primary: #2563eb;
       --primary-hover: #1d4ed8;
-      --bg: #f8fafc;
-      --card-bg: #ffffff;
-      --text: #0f172a;
-      --text-muted: #64748b;
-      --border: #e2e8f0;
-      --success: #10b981;
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --code-bg: #090d16;
+      --accent-green: #10b981;
+      --accent-amber: #f59e0b;
     }
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "JetBrains Mono", monospace;
     }
     body {
       background-color: var(--bg);
       color: var(--text);
       line-height: 1.6;
-      padding: 40px 20px;
+      padding: 30px 16px;
     }
     .container {
-      max-width: 680px;
+      max-width: 840px;
       margin: 0 auto;
       background: var(--card-bg);
       border-radius: 16px;
       padding: 32px;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
-      border: 1px solid var(--border);
+      border: 1px solid var(--card-border);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+    }
+    .badge-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
     }
     .badge {
-      display: inline-block;
-      background: #eff6ff;
-      color: var(--primary);
+      background: rgba(37, 99, 235, 0.18);
+      color: #60a5fa;
       font-size: 12px;
       font-weight: 600;
       padding: 4px 10px;
       border-radius: 20px;
-      margin-bottom: 12px;
+      border: 1px solid rgba(96, 165, 250, 0.2);
     }
-    h2 {
-      font-size: 24px;
-      color: var(--text);
+    h1 {
+      font-size: 26px;
       font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
       margin-bottom: 6px;
     }
     p.subtitle {
@@ -57,43 +67,73 @@
       font-size: 14px;
       margin-bottom: 24px;
     }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 640px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
     .form-group {
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
     label {
       display: block;
       font-size: 13px;
       font-weight: 600;
-      color: #334155;
+      color: #cbd5e1;
       margin-bottom: 6px;
     }
-    .helper-text {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-    input, select, textarea {
+    select, input, textarea {
       width: 100%;
       padding: 10px 14px;
-      border: 1px solid var(--border);
+      background-color: var(--code-bg);
+      border: 1px solid var(--card-border);
       border-radius: 8px;
       font-size: 14px;
-      color: var(--text);
-      background-color: #fff;
-      transition: all 0.2s ease;
+      color: #f1f5f9;
+      transition: all 0.2s;
     }
-    input:focus, select:focus, textarea:focus {
+    select:focus, input:focus, textarea:focus {
       outline: none;
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
     }
     textarea {
-      min-height: 110px;
+      min-height: 160px;
+      font-family: "JetBrains Mono", Consolas, Menlo, monospace;
+      font-size: 13.5px;
+      line-height: 1.5;
+      tab-size: 4;
       resize: vertical;
     }
-    .btn {
+    .sample-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 4px;
+      margin-bottom: 12px;
+      font-size: 12px;
+    }
+    .sample-btn {
+      background: none;
+      border: 1px dashed var(--card-border);
+      color: #93c5fd;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+    .sample-btn:hover {
+      background: rgba(37, 99, 235, 0.15);
+      border-color: #60a5fa;
+    }
+    .btn-submit {
       width: 100%;
-      padding: 12px;
+      padding: 14px;
       background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
       color: white;
       font-size: 15px;
@@ -105,227 +145,265 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      transition: opacity 0.2s;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      transition: all 0.2s;
     }
-    .btn:hover {
+    .btn-submit:hover {
       opacity: 0.95;
+      transform: translateY(-1px);
     }
-    .btn:disabled {
+    .btn-submit:disabled {
       opacity: 0.6;
       cursor: not-allowed;
+      transform: none;
     }
-    .result-card {
-      margin-top: 24px;
-      padding: 18px;
-      background-color: #f8fafc;
-      border: 1px solid var(--border);
-      border-radius: 10px;
+    .result-section {
+      margin-top: 28px;
+      background: var(--code-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 20px;
       display: none;
     }
     .result-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 10px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-muted);
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 12px;
+      margin-bottom: 14px;
     }
-    .result-content {
+    .result-title {
       font-size: 14px;
-      color: var(--text);
+      font-weight: 700;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-copy {
+      background: #1e293b;
+      border: 1px solid var(--card-border);
+      color: #94a3b8;
+      padding: 4px 10px;
+      font-size: 12px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .btn-copy:hover {
+      color: #fff;
+    }
+    .result-body {
+      color: #e2e8f0;
+      font-size: 14px;
       white-space: pre-wrap;
       word-break: break-word;
       line-height: 1.6;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
-    .status-pill {
-      font-size: 11px;
-      padding: 2px 8px;
-      border-radius: 12px;
-      background: #e2e8f0;
-      color: #475569;
-    }
-    .status-pill.success {
-      background: #dcfce7;
-      color: #166534;
+    pre code {
+      display: block;
+      background: #000000;
+      border: 1px solid #1e293b;
+      padding: 14px;
+      border-radius: 8px;
+      font-family: "JetBrains Mono", Consolas, Menlo, monospace;
+      font-size: 13px;
+      color: #a7f3d0;
+      margin: 10px 0;
+      overflow-x: auto;
     }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <span class="badge">MLOps & Cloud Deployment</span>
-    <h2>Multi-Task AI Web Application</h2>
-    <p class="subtitle">Select an AI task, enter your prompt, and run inference using pre-trained deep learning models or Groq.</p>
+    <div class="badge-bar">
+      <span class="badge">Deep Learning MLOps</span>
+      <span class="badge">Groq LPU Acceleration</span>
+      <span class="badge">Code Intelligence</span>
+    </div>
 
-    <div class="form-group">
-      <label for="aiTask">Select AI Task:</label>
-      <select id="aiTask" onchange="onTaskChange()">
-        <option value="sentiment">Sentiment Analyzer (Positive / Negative)</option>
-        <option value="summarizer">Text Summarizer (Concise Bullet Points)</option>
-        <option value="translator">Translator (English to Spanish / Bengali)</option>
-        <option value="general">General Q&A Assistant</option>
-      </select>
+    <h1>⚡ DevShield AI</h1>
+    <p class="subtitle">Automated Code Bug Diagnostics, Performance Optimizer & Security Auditing Suite.</p>
+
+    <div class="grid-2">
+      <div class="form-group">
+        <label for="codeLang">Programming Language:</label>
+        <select id="codeLang" onchange="updateSampleCode()">
+          <option value="python">Python</option>
+          <option value="javascript">JavaScript / TypeScript</option>
+          <option value="cpp">C++</option>
+          <option value="java">Java</option>
+          <option value="sql">SQL</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="aiMode">Analysis Operation:</label>
+        <select id="aiMode">
+          <option value="bug_fix">🐛 Bug Detection & Auto-Fix</option>
+          <option value="optimize">⚡ Complexity (Big-O) & Optimization</option>
+          <option value="security">🔒 Security & Vulnerability Audit</option>
+          <option value="test_gen">🧪 Generate Automated Unit Tests</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="form-group">
+        <label for="aiModel">AI Engine (Deep Learning LLM):</label>
+        <select id="aiModel">
+          <option value="llama-3.3-70b-versatile">Meta Llama 3.3 70B (Top Coding Benchmark)</option>
+          <option value="llama-3.1-8b-instant">Meta Llama 3.1 8B Instant (Ultra-Fast)</option>
+          <option value="mixtral-8x7b-32768">Mixtral 8x7B (High Context)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="apiKey">Groq API Key:</label>
+        <input type="password" id="apiKey" placeholder="gsk_..." />
+      </div>
     </div>
 
     <div class="form-group">
-      <label for="aiModel">Select Model Engine:</label>
-      <select id="aiModel">
-        <option value="llama-3.3-70b-versatile">Meta Llama 3.3 70B Versatile (Fast & Accurate)</option>
-        <option value="llama-3.1-8b-instant">Meta Llama 3.1 8B Instant (Ultra-Fast)</option>
-        <option value="mixtral-8x7b-32768">Mixtral 8x7B (High Context)</option>
-        <option value="gemma2-9b-it">Google Gemma 2 9B</option>
-      </select>
+      <div class="sample-bar">
+        <label for="codeSnippet" style="margin-bottom: 0;">Code Snippet:</label>
+        <button type="button" class="sample-btn" onclick="loadSampleBuggyCode()">📋 Load Sample Buggy Code</button>
+      </div>
+      <textarea id="codeSnippet" placeholder="Paste your code snippet here to analyze..."></textarea>
     </div>
 
-    <div class="form-group">
-      <label for="apiKey">Groq API Key (Optional for Sentiment Analysis):</label>
-      <input type="password" id="apiKey" placeholder="gsk_..." />
-      <p class="helper-text">
-        Free API key from <a href="https://console.groq.com/keys" target="_blank" style="color: var(--primary);">console.groq.com</a>. (Saved in browser memory).
-      </p>
-    </div>
-
-    <div class="form-group">
-      <label for="inputText">Input Text / Prompt:</label>
-      <textarea id="inputText" placeholder="Enter your text or sentence here..."></textarea>
-    </div>
-
-    <button id="runBtn" class="btn" onclick="runAiTask()">
-      <span>Run Model Inference</span>
+    <button id="runBtn" class="btn-submit" onclick="analyzeCode()">
+      <span>Analyze & Optimize Code</span>
     </button>
 
-    <div id="resultCard" class="result-card">
+    <div id="resultSection" class="result-section">
       <div class="result-header">
-        <span>Inference Output</span>
-        <span id="statusPill" class="status-pill">Ready</span>
+        <span class="result-title" id="resultTitle">Analysis Report</span>
+        <button class="btn-copy" onclick="copyResult()">Copy Report</button>
       </div>
-      <div id="resultContent" class="result-content"></div>
+      <div class="result-body" id="resultBody"></div>
     </div>
   </div>
 
   <script>
-    // Auto-load saved Groq API key from localStorage
+    const sampleBuggyCodes = {
+      python: `def calculate_average(numbers):\n    total = 0\n    # Bug: Division by zero when empty, off-by-one, and incorrect return\n    for i in range(len(numbers)):\n        total += numbers[i]\n    return total / len(numbers)\n\n# Test call\nprint(calculate_average([]))`,
+      javascript: `async function fetchUserData(userId) {\n    // Bug: Missing error handling and unhandled promise rejection\n    let res = fetch('https://api.example.com/user/' + userId);\n    let data = res.json();\n    console.log("User name: " + data.profile.name);\n    return data;\n}`,
+      cpp: `#include <iostream>\n\nint* createArray() {\n    // Bug: Returning pointer to local stack memory (dangling pointer)\n    int arr[5] = {1, 2, 3, 4, 5};\n    return arr;\n}\n\nint main() {\n    int* ptr = createArray();\n    std::cout << ptr[0] << std::endl;\n    return 0;\n}`,
+      java: `public class StringUtils {\n    public static boolean isEqual(String s1, String s2) {\n        // Bug: Using == instead of .equals() for String comparison and NullPointerException\n        return s1 == s2;\n    }\n}`,
+      sql: `SELECT users.id, users.name, orders.amount\nFROM users\n-- Bug: Cartesian product due to missing JOIN condition\nJOIN orders\nWHERE orders.status = 'completed';`
+    };
+
     window.addEventListener('DOMContentLoaded', () => {
       const savedKey = localStorage.getItem('groq_api_key');
-      if (savedKey) {
-        document.getElementById('apiKey').value = savedKey;
-      }
-      onTaskChange();
+      if (savedKey) document.getElementById('apiKey').value = savedKey;
+      loadSampleBuggyCode();
     });
 
-    function onTaskChange() {
-      const task = document.getElementById('aiTask').value;
-      const input = document.getElementById('inputText');
-      if (task === 'sentiment') {
-        input.placeholder = "e.g., Deploying pre-trained deep learning models with CI/CD is super efficient!";
-      } else if (task === 'summarizer') {
-        input.placeholder = "Paste a paragraph of text to generate a concise summary...";
-      } else if (task === 'translator') {
-        input.placeholder = "Enter English text to translate...";
-      } else {
-        input.placeholder = "Ask any question...";
-      }
+    function loadSampleBuggyCode() {
+      const lang = document.getElementById('codeLang').value;
+      document.getElementById('codeSnippet').value = sampleBuggyCodes[lang] || sampleBuggyCodes.python;
     }
 
-    async function runAiTask() {
-      const apiKeyInput = document.getElementById('apiKey').value.trim();
-      const selectedModel = document.getElementById('aiModel').value;
-      const task = document.getElementById('aiTask').value;
-      const text = document.getElementById('inputText').value.trim();
-      const resultCard = document.getElementById('resultCard');
-      const resultContent = document.getElementById('resultContent');
-      const statusPill = document.getElementById('statusPill');
+    function updateSampleCode() {
+      loadSampleBuggyCode();
+    }
+
+    function copyResult() {
+      const text = document.getElementById('resultBody').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Report copied to clipboard!");
+      });
+    }
+
+    async function analyzeCode() {
+      const apiKey = document.getElementById('apiKey').value.trim();
+      const lang = document.getElementById('codeLang').value;
+      const mode = document.getElementById('aiMode').value;
+      const model = document.getElementById('aiModel').value;
+      const code = document.getElementById('codeSnippet').value.trim();
+
+      const resultSection = document.getElementById('resultSection');
+      const resultTitle = document.getElementById('resultTitle');
+      const resultBody = document.getElementById('resultBody');
       const runBtn = document.getElementById('runBtn');
 
-      if (!text) {
-        alert("Please enter input text or prompt.");
+      if (!apiKey) {
+        alert("Please enter your free Groq API key (starts with gsk_). Get one instantly at console.groq.com/keys");
         return;
       }
 
-      resultCard.style.display = "block";
-      statusPill.className = "status-pill";
-      statusPill.innerText = "Processing...";
-      resultContent.innerText = "Running model inference...";
+      if (!code) {
+        alert("Please paste or write code to analyze.");
+        return;
+      }
+
+      localStorage.setItem('groq_api_key', apiKey);
+
+      resultSection.style.display = "block";
+      resultTitle.innerText = "Analyzing Code Diagnostics...";
+      resultBody.innerText = "Running deep learning code analysis with " + model + "...";
       runBtn.disabled = true;
 
-      // Save key if entered
-      if (apiKeyInput) {
-        localStorage.setItem('groq_api_key', apiKeyInput);
-      }
-
-      // If user selected Sentiment and has NO key, use our live FastAPI Render backend directly!
-      if (!apiKeyInput && task === "sentiment") {
-        try {
-          const response = await fetch("https://thesis-task-2.onrender.com/predict", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text: text })
-          });
-          const data = await response.json();
-          if (response.ok) {
-            statusPill.className = "status-pill success";
-            statusPill.innerText = "Hugging Face DistilBERT (FastAPI Live)";
-            resultContent.innerText = `Prediction: ${data.label}\nConfidence Score: ${(data.score * 100).toFixed(2)}%\nModel: ${data.model_name}`;
-          } else {
-            resultContent.innerText = "Error: " + (data.detail || "Inference failed");
-          }
-        } catch (err) {
-          resultContent.innerText = "Network Error: " + err.message;
-        } finally {
-          runBtn.disabled = false;
-        }
-        return;
-      }
-
-      // If other tasks without key
-      if (!apiKeyInput) {
-        statusPill.innerText = "Key Required";
-        resultContent.innerText = "Please enter your free Groq API key (starts with gsk_) to run this task. You can get one for free at https://console.groq.com/keys";
-        runBtn.disabled = false;
-        return;
-      }
-
-      // Groq Inference
-      let systemPrompt = "You are a helpful AI assistant.";
-      if (task === "summarizer") {
-        systemPrompt = "You are an expert summarizer. Summarize the user text into 2-3 clear, concise bullet points.";
-      } else if (task === "sentiment") {
-        systemPrompt = "You are a sentiment analyzer. Classify the sentiment as POSITIVE, NEGATIVE, or NEUTRAL, followed by a 1-sentence explanation.";
-      } else if (task === "translator") {
-        systemPrompt = "You are a professional translator. Translate the given English text accurately into Spanish and Bengali.";
+      // System Prompts based on selected mode
+      let systemPrompt = "";
+      if (mode === "bug_fix") {
+        systemPrompt = `You are a Principal Software Engineer and Code Reviewer.
+Analyze the provided ${lang} code:
+1. 🐛 **Detected Bugs & Flaws**: Bullet points explaining what is broken and why (syntax errors, logical bugs, edge cases like empty inputs).
+2. 🛠️ **Corrected Code**: Clean, production-ready, refactored ${lang} code.
+3. 💡 **Key Takeaways**: Brief explanation of the fix.`;
+      } else if (mode === "optimize") {
+        systemPrompt = `You are an Algorithm and Performance Optimization Specialist.
+Analyze the provided ${lang} code:
+1. ⏱️ **Current Complexity**: Current Time Complexity and Space Complexity in Big-O notation.
+2. ⚡ **Optimization Opportunities**: How to reduce memory allocation or execution time.
+3. 🚀 **Optimized Code**: Refactored code achieving optimal Big-O performance with comments.`;
+      } else if (mode === "security") {
+        systemPrompt = `You are a Cybersecurity and Application Security Auditor.
+Analyze the provided ${lang} code for vulnerabilities:
+1. 🛡️ **Vulnerability Assessment**: Identify security risks (e.g. injection, buffer overflow, dangling pointers, unhandled exceptions, memory leaks).
+2. ⚠️ **Severity Rating**: Low / Medium / Critical.
+3. 🔒 **Secure Refactored Code**: Write the secured version of the code.`;
+      } else if (mode === "test_gen") {
+        systemPrompt = `You are a QA Automation Specialist.
+Generate a comprehensive suite of automated unit tests for the provided ${lang} code:
+- Include tests for normal happy path.
+- Include tests for edge cases (null, empty, negative, boundary values).
+- Write clean, runnable test cases using standard testing frameworks (pytest for Python, Jest for JS, GoogleTest for C++, JUnit for Java).`;
       }
 
       try {
         const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
           method: "POST",
           headers: {
-            "Authorization": `Bearer ${apiKeyInput}`,
+            "Authorization": `Bearer ${apiKey}`,
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            model: selectedModel,
+            model: model,
             messages: [
               { role: "system", content: systemPrompt },
-              { role: "user", content: text }
+              { role: "user", content: `Language: ${lang}\n\nCode snippet:\n${code}` }
             ],
-            temperature: 0.2
+            temperature: 0.1
           })
         });
 
         const data = await response.json();
 
         if (!response.ok || data.error) {
-          resultContent.innerText = "API Error: " + (data.error?.message || response.statusText);
+          resultBody.innerText = "API Error: " + (data.error?.message || response.statusText);
         } else if (data.choices && data.choices.length > 0) {
-          statusPill.className = "status-pill success";
-          statusPill.innerText = "Groq " + selectedModel;
-          resultContent.innerText = data.choices[0].message.content;
+          resultTitle.innerText = "Diagnostics & Recommendations";
+          resultBody.innerText = data.choices[0].message.content;
         } else {
-          resultContent.innerText = "Unexpected API response.";
+          resultBody.innerText = "Error: Unexpected response format.";
         }
       } catch (err) {
-        resultContent.innerText = "Network Error: " + err.message;
+        resultBody.innerText = "Network Error: " + err.message;
       } finally {
         runBtn.disabled = false;
       }

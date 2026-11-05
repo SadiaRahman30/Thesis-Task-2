@@ -1,11 +1,11 @@
 ---
-title: MLOps Multi-Task AI Web App
-emoji: 🚀
-colorFrom: blue
-colorTo: indigo
+title: DevShield AI - Code Bug Detector & Optimizer
+emoji: ⚡
+colorFrom: green
+colorTo: blue
 sdk: static
 pinned: false
 ---
 
-# MLOps Multi-Task AI Web App
-A lightweight, multi-task AI application powered by pre-trained deep learning models and Groq LPU inference.
+# DevShield AI - Code Bug Detector & Optimizer
+Automated code review, bug diagnostics, security audit, and performance optimization powered by deep learning and Groq LPU inference.
