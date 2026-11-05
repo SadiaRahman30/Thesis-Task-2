@@ -196,3 +196,4 @@ curl -X POST "http://localhost:8000/predict/batch" \
    * Builds the Docker image containing the application and pre-cached model weights.
    * Authenticates with GitHub Container Registry using `${{ secrets.GITHUB_TOKEN }}` (no external credentials required).
    * Pushes the versioned and `latest` tags to `ghcr.io/sadiarahman30/thesis-task-2`.
+

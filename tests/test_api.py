@@ -91,3 +91,4 @@ def test_predict_batch_empty_list():
     payload = {"texts": []}
     response = client.post("/predict/batch", json=payload)
     assert response.status_code == 422
+

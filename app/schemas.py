@@ -36,3 +36,4 @@ class BatchPredictionRequest(BaseModel):
 class BatchPredictionResponse(BaseModel):
     predictions: List[PredictionResponse]
     total_processed: int = Field(..., example=2)
+

@@ -57,3 +57,4 @@ class ModelService:
 
 # Global singleton instance
 model_service = ModelService()
+

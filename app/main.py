@@ -112,3 +112,4 @@ async def predict_batch(request: BatchPredictionRequest):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Batch inference error: {str(e)}"
         )
+
