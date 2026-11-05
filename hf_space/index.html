@@ -3,19 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DevShield AI - Code Bug Detector & Optimizer</title>
+  <title>AI Code Bug Detector</title>
   <style>
     :root {
-      --primary: #2563eb;
-      --primary-hover: #1d4ed8;
+      --primary: #dc2626;
+      --primary-hover: #b91c1c;
       --bg: #0f172a;
       --card-bg: #1e293b;
       --card-border: #334155;
       --text: #f8fafc;
       --text-muted: #94a3b8;
       --code-bg: #090d16;
-      --accent-green: #10b981;
-      --accent-amber: #f59e0b;
     }
     * {
       box-sizing: border-box;
@@ -30,7 +28,7 @@
       padding: 30px 16px;
     }
     .container {
-      max-width: 840px;
+      max-width: 760px;
       margin: 0 auto;
       background: var(--card-bg);
       border-radius: 16px;
@@ -38,20 +36,16 @@
       border: 1px solid var(--card-border);
       box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
     }
-    .badge-bar {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
-    }
     .badge {
-      background: rgba(37, 99, 235, 0.18);
-      color: #60a5fa;
+      display: inline-block;
+      background: rgba(220, 38, 38, 0.18);
+      color: #f87171;
       font-size: 12px;
       font-weight: 600;
       padding: 4px 10px;
       border-radius: 20px;
-      border: 1px solid rgba(96, 165, 250, 0.2);
+      border: 1px solid rgba(248, 113, 113, 0.25);
+      margin-bottom: 12px;
     }
     h1 {
       font-size: 26px;
@@ -73,7 +67,7 @@
       gap: 16px;
       margin-bottom: 16px;
     }
-    @media (max-width: 640px) {
+    @media (max-width: 600px) {
       .grid-2 { grid-template-columns: 1fr; }
     }
     .form-group {
@@ -98,15 +92,14 @@
     }
     select:focus, input:focus, textarea:focus {
       outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
+      border-color: #ef4444;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25);
     }
     textarea {
-      min-height: 160px;
+      min-height: 180px;
       font-family: "JetBrains Mono", Consolas, Menlo, monospace;
       font-size: 13.5px;
       line-height: 1.5;
-      tab-size: 4;
       resize: vertical;
     }
     .sample-bar {
@@ -114,13 +107,13 @@
       align-items: center;
       justify-content: space-between;
       margin-top: 4px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       font-size: 12px;
     }
     .sample-btn {
       background: none;
       border: 1px dashed var(--card-border);
-      color: #93c5fd;
+      color: #fca5a5;
       padding: 4px 10px;
       border-radius: 6px;
       cursor: pointer;
@@ -128,13 +121,13 @@
       transition: all 0.2s;
     }
     .sample-btn:hover {
-      background: rgba(37, 99, 235, 0.15);
-      border-color: #60a5fa;
+      background: rgba(220, 38, 38, 0.15);
+      border-color: #ef4444;
     }
     .btn-submit {
       width: 100%;
       padding: 14px;
-      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
       color: white;
       font-size: 15px;
       font-weight: 600;
@@ -145,7 +138,7 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.35);
       transition: all 0.2s;
     }
     .btn-submit:hover {
@@ -176,10 +169,7 @@
     .result-title {
       font-size: 14px;
       font-weight: 700;
-      color: #38bdf8;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      color: #f87171;
     }
     .btn-copy {
       background: #1e293b;
@@ -199,64 +189,26 @@
       white-space: pre-wrap;
       word-break: break-word;
       line-height: 1.6;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
-    pre code {
-      display: block;
-      background: #000000;
-      border: 1px solid #1e293b;
-      padding: 14px;
-      border-radius: 8px;
-      font-family: "JetBrains Mono", Consolas, Menlo, monospace;
-      font-size: 13px;
-      color: #a7f3d0;
-      margin: 10px 0;
-      overflow-x: auto;
     }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <div class="badge-bar">
-      <span class="badge">Deep Learning MLOps</span>
-      <span class="badge">Groq LPU Acceleration</span>
-      <span class="badge">Code Intelligence</span>
-    </div>
-
-    <h1>⚡ DevShield AI</h1>
-    <p class="subtitle">Automated Code Bug Diagnostics, Performance Optimizer & Security Auditing Suite.</p>
+    <span class="badge">AI Code Diagnostics</span>
+    <h1>🐛 Bug Detector</h1>
+    <p class="subtitle">Paste your code to detect syntax errors, logical bugs, and get instant fixes with explanations.</p>
 
     <div class="grid-2">
       <div class="form-group">
         <label for="codeLang">Programming Language:</label>
-        <select id="codeLang" onchange="updateSampleCode()">
+        <select id="codeLang" onchange="loadSampleCode()">
           <option value="python">Python</option>
           <option value="javascript">JavaScript / TypeScript</option>
           <option value="cpp">C++</option>
           <option value="java">Java</option>
+          <option value="c">C</option>
           <option value="sql">SQL</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="aiMode">Analysis Operation:</label>
-        <select id="aiMode">
-          <option value="bug_fix">🐛 Bug Detection & Auto-Fix</option>
-          <option value="optimize">⚡ Complexity (Big-O) & Optimization</option>
-          <option value="security">🔒 Security & Vulnerability Audit</option>
-          <option value="test_gen">🧪 Generate Automated Unit Tests</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="grid-2">
-      <div class="form-group">
-        <label for="aiModel">AI Engine (Deep Learning LLM):</label>
-        <select id="aiModel">
-          <option value="llama-3.3-70b-versatile">Meta Llama 3.3 70B (Top Coding Benchmark)</option>
-          <option value="llama-3.1-8b-instant">Meta Llama 3.1 8B Instant (Ultra-Fast)</option>
-          <option value="mixtral-8x7b-32768">Mixtral 8x7B (High Context)</option>
         </select>
       </div>
 
@@ -269,19 +221,19 @@
     <div class="form-group">
       <div class="sample-bar">
         <label for="codeSnippet" style="margin-bottom: 0;">Code Snippet:</label>
-        <button type="button" class="sample-btn" onclick="loadSampleBuggyCode()">📋 Load Sample Buggy Code</button>
+        <button type="button" class="sample-btn" onclick="loadSampleCode()">📋 Load Buggy Sample Code</button>
       </div>
-      <textarea id="codeSnippet" placeholder="Paste your code snippet here to analyze..."></textarea>
+      <textarea id="codeSnippet" placeholder="Paste your code snippet here..."></textarea>
     </div>
 
-    <button id="runBtn" class="btn-submit" onclick="analyzeCode()">
-      <span>Analyze & Optimize Code</span>
+    <button id="runBtn" class="btn-submit" onclick="detectBugs()">
+      <span>🔍 Detect Bugs & Fix Code</span>
     </button>
 
     <div id="resultSection" class="result-section">
       <div class="result-header">
-        <span class="result-title" id="resultTitle">Analysis Report</span>
-        <button class="btn-copy" onclick="copyResult()">Copy Report</button>
+        <span class="result-title" id="resultTitle">Bug Report & Fix</span>
+        <button class="btn-copy" onclick="copyResult()">Copy Fix</button>
       </div>
       <div class="result-body" id="resultBody"></div>
     </div>
@@ -289,40 +241,35 @@
 
   <script>
     const sampleBuggyCodes = {
-      python: `def calculate_average(numbers):\n    total = 0\n    # Bug: Division by zero when empty, off-by-one, and incorrect return\n    for i in range(len(numbers)):\n        total += numbers[i]\n    return total / len(numbers)\n\n# Test call\nprint(calculate_average([]))`,
-      javascript: `async function fetchUserData(userId) {\n    // Bug: Missing error handling and unhandled promise rejection\n    let res = fetch('https://api.example.com/user/' + userId);\n    let data = res.json();\n    console.log("User name: " + data.profile.name);\n    return data;\n}`,
-      cpp: `#include <iostream>\n\nint* createArray() {\n    // Bug: Returning pointer to local stack memory (dangling pointer)\n    int arr[5] = {1, 2, 3, 4, 5};\n    return arr;\n}\n\nint main() {\n    int* ptr = createArray();\n    std::cout << ptr[0] << std::endl;\n    return 0;\n}`,
-      java: `public class StringUtils {\n    public static boolean isEqual(String s1, String s2) {\n        // Bug: Using == instead of .equals() for String comparison and NullPointerException\n        return s1 == s2;\n    }\n}`,
-      sql: `SELECT users.id, users.name, orders.amount\nFROM users\n-- Bug: Cartesian product due to missing JOIN condition\nJOIN orders\nWHERE orders.status = 'completed';`
+      python: `def calculate_average(numbers):\n    total = 0\n    # Bug: Division by zero when empty list provided\n    for i in range(len(numbers)):\n        total += numbers[i]\n    return total / len(numbers)\n\nprint(calculate_average([]))`,
+      javascript: `async function fetchUserData(userId) {\n    // Bug: Missing await on fetch and json parsing\n    let res = fetch('https://api.example.com/user/' + userId);\n    let data = res.json();\n    return data.profile.name;\n}`,
+      cpp: `#include <iostream>\n\nint* createArray() {\n    // Bug: Returning pointer to local stack variable\n    int arr[5] = {1, 2, 3, 4, 5};\n    return arr;\n}\n\nint main() {\n    int* ptr = createArray();\n    std::cout << ptr[0] << std::endl;\n    return 0;\n}`,
+      java: `public class StringUtils {\n    public static boolean isEqual(String s1, String s2) {\n        // Bug: Using == instead of .equals() for objects\n        return s1 == s2;\n    }\n}`,
+      c: `#include <stdio.h>\n#include <string.h>\n\nint main() {\n    char buffer[5];\n    // Bug: Buffer overflow vulnerability\n    strcpy(buffer, "ThisIsWayTooLong");\n    printf("%s\\n", buffer);\n    return 0;\n}`,
+      sql: `SELECT users.id, users.name, orders.amount\nFROM users\n-- Bug: Missing JOIN condition causes Cartesian product\nJOIN orders\nWHERE orders.status = 'completed';`
     };
 
     window.addEventListener('DOMContentLoaded', () => {
       const savedKey = localStorage.getItem('groq_api_key');
       if (savedKey) document.getElementById('apiKey').value = savedKey;
-      loadSampleBuggyCode();
+      loadSampleCode();
     });
 
-    function loadSampleBuggyCode() {
+    function loadSampleCode() {
       const lang = document.getElementById('codeLang').value;
       document.getElementById('codeSnippet').value = sampleBuggyCodes[lang] || sampleBuggyCodes.python;
-    }
-
-    function updateSampleCode() {
-      loadSampleBuggyCode();
     }
 
     function copyResult() {
       const text = document.getElementById('resultBody').innerText;
       navigator.clipboard.writeText(text).then(() => {
-        alert("Report copied to clipboard!");
+        alert("Bug report copied to clipboard!");
       });
     }
 
-    async function analyzeCode() {
+    async function detectBugs() {
       const apiKey = document.getElementById('apiKey').value.trim();
       const lang = document.getElementById('codeLang').value;
-      const mode = document.getElementById('aiMode').value;
-      const model = document.getElementById('aiModel').value;
       const code = document.getElementById('codeSnippet').value.trim();
 
       const resultSection = document.getElementById('resultSection');
@@ -331,7 +278,7 @@
       const runBtn = document.getElementById('runBtn');
 
       if (!apiKey) {
-        alert("Please enter your free Groq API key (starts with gsk_). Get one instantly at console.groq.com/keys");
+        alert("Please enter your free Groq API key (starts with gsk_). Get one free at console.groq.com/keys");
         return;
       }
 
@@ -343,37 +290,15 @@
       localStorage.setItem('groq_api_key', apiKey);
 
       resultSection.style.display = "block";
-      resultTitle.innerText = "Analyzing Code Diagnostics...";
-      resultBody.innerText = "Running deep learning code analysis with " + model + "...";
+      resultTitle.innerText = "Analyzing Code for Bugs...";
+      resultBody.innerText = "Scanning code for syntax errors, exceptions, and logical bugs...";
       runBtn.disabled = true;
 
-      // System Prompts based on selected mode
-      let systemPrompt = "";
-      if (mode === "bug_fix") {
-        systemPrompt = `You are a Principal Software Engineer and Code Reviewer.
+      const systemPrompt = `You are an expert Code Debugger and Software Engineer.
 Analyze the provided ${lang} code:
-1. 🐛 **Detected Bugs & Flaws**: Bullet points explaining what is broken and why (syntax errors, logical bugs, edge cases like empty inputs).
-2. 🛠️ **Corrected Code**: Clean, production-ready, refactored ${lang} code.
-3. 💡 **Key Takeaways**: Brief explanation of the fix.`;
-      } else if (mode === "optimize") {
-        systemPrompt = `You are an Algorithm and Performance Optimization Specialist.
-Analyze the provided ${lang} code:
-1. ⏱️ **Current Complexity**: Current Time Complexity and Space Complexity in Big-O notation.
-2. ⚡ **Optimization Opportunities**: How to reduce memory allocation or execution time.
-3. 🚀 **Optimized Code**: Refactored code achieving optimal Big-O performance with comments.`;
-      } else if (mode === "security") {
-        systemPrompt = `You are a Cybersecurity and Application Security Auditor.
-Analyze the provided ${lang} code for vulnerabilities:
-1. 🛡️ **Vulnerability Assessment**: Identify security risks (e.g. injection, buffer overflow, dangling pointers, unhandled exceptions, memory leaks).
-2. ⚠️ **Severity Rating**: Low / Medium / Critical.
-3. 🔒 **Secure Refactored Code**: Write the secured version of the code.`;
-      } else if (mode === "test_gen") {
-        systemPrompt = `You are a QA Automation Specialist.
-Generate a comprehensive suite of automated unit tests for the provided ${lang} code:
-- Include tests for normal happy path.
-- Include tests for edge cases (null, empty, negative, boundary values).
-- Write clean, runnable test cases using standard testing frameworks (pytest for Python, Jest for JS, GoogleTest for C++, JUnit for Java).`;
-      }
+1. 🐛 **Detected Bugs & Issues**: Clearly list each bug (syntax error, logic mistake, edge case like null/empty inputs, memory issue) and explain WHY it fails.
+2. 🛠️ **Corrected Code**: Provide the clean, working, refactored ${lang} code.
+3. 💡 **What Was Changed**: 1-2 sentence explanation of the solution.`;
 
       try {
         const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -383,7 +308,7 @@ Generate a comprehensive suite of automated unit tests for the provided ${lang} 
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            model: model,
+            model: "llama-3.3-70b-versatile",
             messages: [
               { role: "system", content: systemPrompt },
               { role: "user", content: `Language: ${lang}\n\nCode snippet:\n${code}` }
@@ -397,7 +322,7 @@ Generate a comprehensive suite of automated unit tests for the provided ${lang} 
         if (!response.ok || data.error) {
           resultBody.innerText = "API Error: " + (data.error?.message || response.statusText);
         } else if (data.choices && data.choices.length > 0) {
-          resultTitle.innerText = "Diagnostics & Recommendations";
+          resultTitle.innerText = "Bug Report & Solution";
           resultBody.innerText = data.choices[0].message.content;
         } else {
           resultBody.innerText = "Error: Unexpected response format.";

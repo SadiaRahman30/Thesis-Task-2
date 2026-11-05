@@ -1,11 +1,11 @@
 ---
-title: DevShield AI - Code Bug Detector & Optimizer
-emoji: ⚡
-colorFrom: green
+title: Bug Detector
+emoji: 🐛
+colorFrom: red
 colorTo: blue
 sdk: static
 pinned: false
 ---
 
-# DevShield AI - Code Bug Detector & Optimizer
-Automated code review, bug diagnostics, security audit, and performance optimization powered by deep learning and Groq LPU inference.
+# AI Code Bug Detector
+An automated deep-learning powered code debugger that detects syntax errors, logical bugs, and edge cases, providing instant bug fixes with explanations.
