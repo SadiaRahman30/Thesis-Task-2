@@ -203,8 +203,8 @@
       <div class="form-group">
         <label for="codeLang">Programming Language:</label>
         <select id="codeLang" onchange="loadSampleCode()">
-          <option value="python">Python</option>
           <option value="javascript">JavaScript / TypeScript</option>
+          <option value="python">Python</option>
           <option value="cpp">C++</option>
           <option value="java">Java</option>
           <option value="c">C</option>
@@ -213,9 +213,19 @@
       </div>
 
       <div class="form-group">
-        <label for="apiKey">Groq API Key:</label>
-        <input type="password" id="apiKey" placeholder="gsk_..." />
+        <label for="aiModel">Groq Model Engine:</label>
+        <select id="aiModel">
+          <option value="openai/gpt-oss-20b">openai/gpt-oss-20b (Fastest Active)</option>
+          <option value="llama-3.1-8b-instant">llama-3.1-8b-instant (Meta Llama 3.1)</option>
+          <option value="openai/gpt-oss-120b">openai/gpt-oss-120b (High Capacity)</option>
+          <option value="qwen/qwen3.8-27b">qwen/qwen3.8-27b (Multilingual)</option>
+        </select>
       </div>
+    </div>
+
+    <div class="form-group">
+      <label for="apiKey">Groq API Key:</label>
+      <input type="password" id="apiKey" placeholder="gsk_..." />
     </div>
 
     <div class="form-group">
@@ -241,8 +251,8 @@
 
   <script>
     const sampleBuggyCodes = {
-      python: `def calculate_average(numbers):\n    total = 0\n    # Bug: Division by zero when empty list provided\n    for i in range(len(numbers)):\n        total += numbers[i]\n    return total / len(numbers)\n\nprint(calculate_average([]))`,
       javascript: `async function fetchUserData(userId) {\n    // Bug: Missing await on fetch and json parsing\n    let res = fetch('https://api.example.com/user/' + userId);\n    let data = res.json();\n    return data.profile.name;\n}`,
+      python: `def calculate_average(numbers):\n    total = 0\n    # Bug: Division by zero when empty list provided\n    for i in range(len(numbers)):\n        total += numbers[i]\n    return total / len(numbers)\n\nprint(calculate_average([]))`,
       cpp: `#include <iostream>\n\nint* createArray() {\n    // Bug: Returning pointer to local stack variable\n    int arr[5] = {1, 2, 3, 4, 5};\n    return arr;\n}\n\nint main() {\n    int* ptr = createArray();\n    std::cout << ptr[0] << std::endl;\n    return 0;\n}`,
       java: `public class StringUtils {\n    public static boolean isEqual(String s1, String s2) {\n        // Bug: Using == instead of .equals() for objects\n        return s1 == s2;\n    }\n}`,
       c: `#include <stdio.h>\n#include <string.h>\n\nint main() {\n    char buffer[5];\n    // Bug: Buffer overflow vulnerability\n    strcpy(buffer, "ThisIsWayTooLong");\n    printf("%s\\n", buffer);\n    return 0;\n}`,
@@ -257,7 +267,7 @@
 
     function loadSampleCode() {
       const lang = document.getElementById('codeLang').value;
-      document.getElementById('codeSnippet').value = sampleBuggyCodes[lang] || sampleBuggyCodes.python;
+      document.getElementById('codeSnippet').value = sampleBuggyCodes[lang] || sampleBuggyCodes.javascript;
     }
 
     function copyResult() {
@@ -270,6 +280,7 @@
     async function detectBugs() {
       const apiKey = document.getElementById('apiKey').value.trim();
       const lang = document.getElementById('codeLang').value;
+      const model = document.getElementById('aiModel').value;
       const code = document.getElementById('codeSnippet').value.trim();
 
       const resultSection = document.getElementById('resultSection');
@@ -291,7 +302,7 @@
 
       resultSection.style.display = "block";
       resultTitle.innerText = "Analyzing Code for Bugs...";
-      resultBody.innerText = "Scanning code for syntax errors, exceptions, and logical bugs...";
+      resultBody.innerText = "Scanning code with Groq " + model + "...";
       runBtn.disabled = true;
 
       const systemPrompt = `You are an expert Code Debugger and Software Engineer.
@@ -308,7 +319,7 @@ Analyze the provided ${lang} code:
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            model: "llama-3.3-70b-versatile",
+            model: model,
             messages: [
               { role: "system", content: systemPrompt },
               { role: "user", content: `Language: ${lang}\n\nCode snippet:\n${code}` }
