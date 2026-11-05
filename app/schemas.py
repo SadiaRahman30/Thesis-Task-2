@@ -1,5 +1,6 @@
+
 from pydantic import BaseModel, Field
-from typing import List
+
 
 class HealthResponse(BaseModel):
     status: str = Field(..., examples=["healthy"])
@@ -22,7 +23,7 @@ class PredictionResponse(BaseModel):
     model_name: str = Field(..., examples=["distilbert/distilbert-base-uncased-finetuned-sst-2-english"])
 
 class BatchPredictionRequest(BaseModel):
-    texts: List[str] = Field(
+    texts: list[str] = Field(
         ...,
         min_length=1,
         max_length=50,
@@ -34,5 +35,5 @@ class BatchPredictionRequest(BaseModel):
     )
 
 class BatchPredictionResponse(BaseModel):
-    predictions: List[PredictionResponse]
+    predictions: list[PredictionResponse]
     total_processed: int = Field(..., examples=[2])

@@ -1,17 +1,17 @@
 import logging
 from contextlib import asynccontextmanager
+
 from fastapi import FastAPI, HTTPException, status
-from fastapi.responses import JSONResponse
 
 from app.config import settings
+from app.model import model_service
 from app.schemas import (
+    BatchPredictionRequest,
+    BatchPredictionResponse,
     HealthResponse,
     PredictionRequest,
     PredictionResponse,
-    BatchPredictionRequest,
-    BatchPredictionResponse,
 )
-from app.model import model_service
 
 logging.basicConfig(
     level=logging.INFO,
@@ -88,7 +88,7 @@ async def predict(request: PredictionRequest):
         logger.exception("Error during prediction")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Inference error: {str(e)}"
+            detail=f"Inference error: {e!s}"
         )
 
 @app.post(
@@ -110,6 +110,6 @@ async def predict_batch(request: BatchPredictionRequest):
         logger.exception("Error during batch prediction")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Batch inference error: {str(e)}"
+            detail=f"Batch inference error: {e!s}"
         )
 

@@ -1,5 +1,6 @@
 import os
 
+
 class Settings:
     PROJECT_NAME: str = "Hugging Face Model Inference API"
     VERSION: str = "1.0.0"
