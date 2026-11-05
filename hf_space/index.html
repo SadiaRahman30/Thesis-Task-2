@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MLOps Multi-Task AI Web App</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --success: #10b981;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 40px 20px;
+    }
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+      border: 1px solid var(--border);
+    }
+    .badge {
+      display: inline-block;
+      background: #eff6ff;
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+    h2 {
+      font-size: 24px;
+      color: var(--text);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    p.subtitle {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+    .form-group {
+      margin-bottom: 18px;
+    }
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #334155;
+      margin-bottom: 6px;
+    }
+    .helper-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      color: var(--text);
+      background-color: #fff;
+      transition: all 0.2s ease;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      color: white;
+      font-size: 15px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: opacity 0.2s;
+    }
+    .btn:hover {
+      opacity: 0.95;
+    }
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .result-card {
+      margin-top: 24px;
+      padding: 18px;
+      background-color: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      display: none;
+    }
+    .result-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .result-content {
+      font-size: 14px;
+      color: var(--text);
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.6;
+    }
+    .status-pill {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 12px;
+      background: #e2e8f0;
+      color: #475569;
+    }
+    .status-pill.success {
+      background: #dcfce7;
+      color: #166534;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <span class="badge">MLOps & Cloud Deployment</span>
+    <h2>Multi-Task AI Web Application</h2>
+    <p class="subtitle">Select an AI task, enter your prompt, and run inference using pre-trained deep learning models or Groq.</p>
+
+    <div class="form-group">
+      <label for="aiTask">Select AI Task:</label>
+      <select id="aiTask" onchange="onTaskChange()">
+        <option value="sentiment">Sentiment Analyzer (Positive / Negative)</option>
+        <option value="summarizer">Text Summarizer (Concise Bullet Points)</option>
+        <option value="translator">Translator (English to Spanish / Bengali)</option>
+        <option value="general">General Q&A Assistant</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="aiModel">Select Model Engine:</label>
+      <select id="aiModel">
+        <option value="llama-3.3-70b-versatile">Meta Llama 3.3 70B Versatile (Fast & Accurate)</option>
+        <option value="llama-3.1-8b-instant">Meta Llama 3.1 8B Instant (Ultra-Fast)</option>
+        <option value="mixtral-8x7b-32768">Mixtral 8x7B (High Context)</option>
+        <option value="gemma2-9b-it">Google Gemma 2 9B</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="apiKey">Groq API Key (Optional for Sentiment Analysis):</label>
+      <input type="password" id="apiKey" placeholder="gsk_..." />
+      <p class="helper-text">
+        Free API key from <a href="https://console.groq.com/keys" target="_blank" style="color: var(--primary);">console.groq.com</a>. (Saved in browser memory).
+      </p>
+    </div>
+
+    <div class="form-group">
+      <label for="inputText">Input Text / Prompt:</label>
+      <textarea id="inputText" placeholder="Enter your text or sentence here..."></textarea>
+    </div>
+
+    <button id="runBtn" class="btn" onclick="runAiTask()">
+      <span>Run Model Inference</span>
+    </button>
+
+    <div id="resultCard" class="result-card">
+      <div class="result-header">
+        <span>Inference Output</span>
+        <span id="statusPill" class="status-pill">Ready</span>
+      </div>
+      <div id="resultContent" class="result-content"></div>
+    </div>
+  </div>
+
+  <script>
+    // Auto-load saved Groq API key from localStorage
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedKey = localStorage.getItem('groq_api_key');
+      if (savedKey) {
+        document.getElementById('apiKey').value = savedKey;
+      }
+      onTaskChange();
+    });
+
+    function onTaskChange() {
+      const task = document.getElementById('aiTask').value;
+      const input = document.getElementById('inputText');
+      if (task === 'sentiment') {
+        input.placeholder = "e.g., Deploying pre-trained deep learning models with CI/CD is super efficient!";
+      } else if (task === 'summarizer') {
+        input.placeholder = "Paste a paragraph of text to generate a concise summary...";
+      } else if (task === 'translator') {
+        input.placeholder = "Enter English text to translate...";
+      } else {
+        input.placeholder = "Ask any question...";
+      }
+    }
+
+    async function runAiTask() {
+      const apiKeyInput = document.getElementById('apiKey').value.trim();
+      const selectedModel = document.getElementById('aiModel').value;
+      const task = document.getElementById('aiTask').value;
+      const text = document.getElementById('inputText').value.trim();
+      const resultCard = document.getElementById('resultCard');
+      const resultContent = document.getElementById('resultContent');
+      const statusPill = document.getElementById('statusPill');
+      const runBtn = document.getElementById('runBtn');
+
+      if (!text) {
+        alert("Please enter input text or prompt.");
+        return;
+      }
+
+      resultCard.style.display = "block";
+      statusPill.className = "status-pill";
+      statusPill.innerText = "Processing...";
+      resultContent.innerText = "Running model inference...";
+      runBtn.disabled = true;
+
+      // Save key if entered
+      if (apiKeyInput) {
+        localStorage.setItem('groq_api_key', apiKeyInput);
+      }
+
+      // If user selected Sentiment and has NO key, use our live FastAPI Render backend directly!
+      if (!apiKeyInput && task === "sentiment") {
+        try {
+          const response = await fetch("https://thesis-task-2.onrender.com/predict", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text: text })
+          });
+          const data = await response.json();
+          if (response.ok) {
+            statusPill.className = "status-pill success";
+            statusPill.innerText = "Hugging Face DistilBERT (FastAPI Live)";
+            resultContent.innerText = `Prediction: ${data.label}\nConfidence Score: ${(data.score * 100).toFixed(2)}%\nModel: ${data.model_name}`;
+          } else {
+            resultContent.innerText = "Error: " + (data.detail || "Inference failed");
+          }
+        } catch (err) {
+          resultContent.innerText = "Network Error: " + err.message;
+        } finally {
+          runBtn.disabled = false;
+        }
+        return;
+      }
+
+      // If other tasks without key
+      if (!apiKeyInput) {
+        statusPill.innerText = "Key Required";
+        resultContent.innerText = "Please enter your free Groq API key (starts with gsk_) to run this task. You can get one for free at https://console.groq.com/keys";
+        runBtn.disabled = false;
+        return;
+      }
+
+      // Groq Inference
+      let systemPrompt = "You are a helpful AI assistant.";
+      if (task === "summarizer") {
+        systemPrompt = "You are an expert summarizer. Summarize the user text into 2-3 clear, concise bullet points.";
+      } else if (task === "sentiment") {
+        systemPrompt = "You are a sentiment analyzer. Classify the sentiment as POSITIVE, NEGATIVE, or NEUTRAL, followed by a 1-sentence explanation.";
+      } else if (task === "translator") {
+        systemPrompt = "You are a professional translator. Translate the given English text accurately into Spanish and Bengali.";
+      }
+
+      try {
+        const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${apiKeyInput}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            model: selectedModel,
+            messages: [
+              { role: "system", content: systemPrompt },
+              { role: "user", content: text }
+            ],
+            temperature: 0.2
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || data.error) {
+          resultContent.innerText = "API Error: " + (data.error?.message || response.statusText);
+        } else if (data.choices && data.choices.length > 0) {
+          statusPill.className = "status-pill success";
+          statusPill.innerText = "Groq " + selectedModel;
+          resultContent.innerText = data.choices[0].message.content;
+        } else {
+          resultContent.innerText = "Unexpected API response.";
+        }
+      } catch (err) {
+        resultContent.innerText = "Network Error: " + err.message;
+      } finally {
+        runBtn.disabled = false;
+      }
+    }
+  </script>
+
+</body>
+</html>
